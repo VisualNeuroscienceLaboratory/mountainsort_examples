@@ -3,7 +3,11 @@ from mountainlab_pytools import mlproc as mlp
 import os
 import json
 
-def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_radius,detect_threshold,detect_interval,opts={}):
+def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_radius,detect_threshold,detect_interval,suffix='',opts={}):
+    ''' From FlatironInstitute directly, but edits made by VNL
+        suffix - added option which is added to base names (e.g. for the .mda (pre?) processing file so it isn't just "raw.mda"; instead raw[suffix].mda)
+                   thus, we can have more than one saved file at a time (no overwrites with unique names)
+    '''
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
         
@@ -12,8 +16,8 @@ def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_r
     
     # Bandpass filter
     bandpass_filter(
-        timeseries=dataset_dir+'/raw.mda',
-        timeseries_out=output_dir+'/filt.mda.prv',
+        timeseries=dataset_dir+'/raw%s.mda' % suffix,
+        timeseries_out=output_dir+'/filt%s.mda.prv' % suffix,
         samplerate=ds_params['samplerate'],
         freq_min=freq_min,
         freq_max=freq_max,
@@ -22,8 +26,8 @@ def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_r
     
     # Whiten
     whiten(
-        timeseries=output_dir+'/filt.mda.prv',
-        timeseries_out=output_dir+'/pre.mda.prv',
+        timeseries=output_dir+'/filt%s.mda.prv' % suffix,
+        timeseries_out=output_dir+'/pre%s.mda.prv' % suffix,
         opts=opts
     )
     
@@ -34,9 +38,9 @@ def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_r
     if 'detect_sign' in ds_params:
         detect_sign=ds_params['detect_sign']
     ms4alg_sort(
-        timeseries=output_dir+'/pre.mda.prv',
-        geom=dataset_dir+'/geom.csv',
-        firings_out=output_dir+'/firings_uncurated.mda',
+        timeseries=output_dir+'/pre%s.mda.prv' % suffix,
+        geom=dataset_dir+'/geom%s.csv' % suffix,
+        firings_out=output_dir+'/firings_uncurated%s.mda' % suffix,
         adjacency_radius=adjacency_radius,
         detect_sign=detect_sign,
         detect_threshold=detect_threshold,
@@ -46,18 +50,18 @@ def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_r
     
     # Compute cluster metrics
     compute_cluster_metrics(
-        timeseries=output_dir+'/pre.mda.prv',
-        firings=output_dir+'/firings_uncurated.mda',
-        metrics_out=output_dir+'/cluster_metrics.json',
+        timeseries=output_dir+'/pre%s.mda.prv' % suffix,
+        firings=output_dir+'/firings_uncurated%s.mda' % suffix,
+        metrics_out=output_dir+'/cluster_metrics%s.json' % suffix,
         samplerate=ds_params['samplerate'],
         opts=opts
     )
     
     # Automated curation
     automated_curation(
-        firings=output_dir+'/firings_uncurated.mda',
-        cluster_metrics=output_dir+'/cluster_metrics.json',
-        firings_out=output_dir+'/firings.mda',
+        firings=output_dir+'/firings_uncurated%s.mda' % suffix,
+        cluster_metrics=output_dir+'/cluster_metrics%s.json' % suffix,
+        firings_out=output_dir+'/firings%s.mda' % suffix,
         opts=opts
     )
     
@@ -183,7 +187,7 @@ def automated_curation(*,firings,cluster_metrics,firings_out,opts={}):
         opts
     )
 
-def synthesize_sample_dataset(*,dataset_dir,samplerate=30000,duration=600,num_channels=4,opts={}):
+def synthesize_sample_dataset(*,dataset_dir,samplerate=30000,duration=600,num_channels=4,suffix='',opts={}):
     if not os.path.exists(dataset_dir):
         os.mkdir(dataset_dir)
     M=num_channels
@@ -191,8 +195,8 @@ def synthesize_sample_dataset(*,dataset_dir,samplerate=30000,duration=600,num_ch
         'ephys.synthesize_random_waveforms',
         {},
         {
-            'geometry_out':dataset_dir+'/geom.csv',
-            'waveforms_out':dataset_dir+'/waveforms_true.mda'
+            'geometry_out':dataset_dir+'/geom%s.csv' % suffix,
+            'waveforms_out':dataset_dir+'/waveforms_true%s.mda' % suffix
         },
         {
             'upsamplefac':13,
@@ -205,7 +209,7 @@ def synthesize_sample_dataset(*,dataset_dir,samplerate=30000,duration=600,num_ch
         'ephys.synthesize_random_firings',
         {},
         {
-            'firings_out':dataset_dir+'/firings_true.mda'
+            'firings_out':dataset_dir+'/firings_true%s.mda' % suffix
         },
         {
             'duration':duration
@@ -215,11 +219,11 @@ def synthesize_sample_dataset(*,dataset_dir,samplerate=30000,duration=600,num_ch
     mlp.addProcess(
         'ephys.synthesize_timeseries',
         {
-            'firings':dataset_dir+'/firings_true.mda',
-            'waveforms':dataset_dir+'/waveforms_true.mda'
+            'firings':dataset_dir+'/firings_true%s.mda' % suffix,
+            'waveforms':dataset_dir+'/waveforms_true%s.mda' % suffix
         },
         {
-            'timeseries_out':dataset_dir+'/raw.mda.prv'
+            'timeseries_out':dataset_dir+'/raw%s.mda.prv' % suffix
         },{
             'duration':duration,
             'waveform_upsamplefac':13,
