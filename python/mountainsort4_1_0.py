@@ -3,7 +3,7 @@ from mountainlab_pytools import mlproc as mlp
 import os
 import json
 
-def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_radius,detect_threshold,opts={}):
+def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_radius,detect_threshold,detect_interval,opts={}):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
         
@@ -40,6 +40,7 @@ def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_r
         adjacency_radius=adjacency_radius,
         detect_sign=detect_sign,
         detect_threshold=detect_threshold,
+	detect_interval=detect_interval,
         opts=opts
     )
     
@@ -96,11 +97,12 @@ def whiten(*,timeseries,timeseries_out,opts={}):
         opts
     )
 
-def ms4alg_sort(*,timeseries,geom,firings_out,detect_sign,adjacency_radius,detect_threshold=3,opts={}):
+def ms4alg_sort(*,timeseries,geom,firings_out,detect_sign,adjacency_radius,detect_threshold=3,detect_interval,opts={}):
     pp={}
     pp['detect_sign']=detect_sign
     pp['adjacency_radius']=adjacency_radius
     pp['detect_threshold']=detect_threshold
+    pp['detect_interval']=detect_interval
     mlp.addProcess(
         'ms4alg.sort',
         {
