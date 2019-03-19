@@ -44,7 +44,7 @@ example we are sorting channels 270-334 (remember channels start at 0!).
 ~~~~
 cd /experiments/ms4binaries/m676/m676p3#
 ml-run-process ephys.convert_array --inputs input:m676p3#11.dat --outputs
-output:raw.mda --parameters dtype:int16 dimensions:385,-
+output:raw.mda --parameters dtype:int16 dimensions:385,-1
 channels:270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,
 ,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,
 308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,
