@@ -1,0 +1,20 @@
+name: vnl-mountainsort
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python==3.6
+  - anaconda
+  - pip
+  - jupyter
+  - jupyterlab
+  - ipykernel
+  - numpy
+  - matplotlib
+  - scipy
+  - seaborn
+  - pandas
+  - lxml
+  - openpyxl
+  - pytables
+  - h5py

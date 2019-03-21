@@ -4,6 +4,10 @@ MountainSort is spike sorting software. It is part of MountainLab, a larger fram
  
 ## Installation and basic usage
 
+Below are the general (i.e. from Flatiron Institute) instructions for installing and using mountainsort. If you are in VNL, you will likely not need to follow the below, and can instead follow the instructions in one of the below:
+- movREADME.md: this will help you run the ms analysis pipeline on one of the VNL machines
+- hpcREADME.md: this will help you run the ms analysis pipeilne on the NYU HPC; talk to Paul or Manu for instructions on getting an account
+
 ### Overview
  
 There are many ways to use MountainSort and MountainLab, and there is not one set of installation instructions that will fit all use cases. We welcome contributions to the documentation and software.
