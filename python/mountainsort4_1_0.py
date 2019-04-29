@@ -1,19 +1,46 @@
 from mountainlab_pytools import mdaio
 from mountainlab_pytools import mlproc as mlp
+import numpy as np
 import os
 import json
+import warnings
+import subprocess
+import pdb
 
-def sort_dataset(*,dataset_dir,output_dir,freq_min=300,freq_max=6000,adjacency_radius,detect_threshold,detect_interval,suffix='',opts={}):
+def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,adjacency_radius,detect_threshold,detect_interval,chan_range,geom_file='npx_1_384.csv',dtype='int16',n_chan=385,opts={}):
     ''' From FlatironInstitute directly, but edits made by VNL
         suffix - added option which is added to base names (e.g. for the .mda (pre?) processing file so it isn't just "raw.mda"; instead raw[suffix].mda)
                    thus, we can have more than one saved file at a time (no overwrites with unique names)
     '''
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
+
+    if len(chan_range) != 2:
+      warnings.warn('Channel range should be [a,b], with a<b; defaulting to 100-130');
+      chan_range = [100,129];
+    suffix = '_%d_%d' % (chan_range[0], chan_range[1]);
+    list_chans = lambda x: ",".join(map(str, np.arange(x[0], x[1]+1)))
+    output_file = 'raw%s.mda' % suffix;
         
     # Dataset parameters
     ds_params=read_dataset_params(dataset_dir)
+
+    shl_cmd = "sed -n '%d,%dp' %s > geom%s.csv" % (chan_range[0]+1, chan_range[1]+1, geom_file, suffix);
+    curr_dir = os.getcwd();
+    os.chdir(output_dir);
+    subprocess.run(shl_cmd, shell=True);
+    os.chdir(curr_dir);
     
+    convert_array(
+        dataset_dir=dataset_dir,
+        input_file=input_file,
+        channels=list_chans(chan_range),
+        output_file=output_file,
+        n_chan=n_chan,
+        dtype=dtype,
+        opts=opts
+    )
+
     # Bandpass filter
     bandpass_filter(
         timeseries=dataset_dir+'/raw%s.mda' % suffix,
@@ -84,6 +111,21 @@ def bandpass_filter(*,timeseries,timeseries_out,samplerate,freq_min,freq_max,opt
             'samplerate':samplerate,
             'freq_min':freq_min,
             'freq_max':freq_max
+        },
+        opts
+    )
+
+def convert_array(*,dataset_dir,input_file,channels,output_file,n_chan,dtype,opts):
+    return mlp.addProcess(
+        'ephys.convert_array',
+        {
+            'input':dataset_dir+'/'+input_file
+        },{
+            'output':dataset_dir+'/'+output_file
+        },{
+            'dtype':dtype,
+            'dimensions':'%d,-1' % n_chan,
+            'channels':channels
         },
         opts
     )
