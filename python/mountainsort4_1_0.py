@@ -24,8 +24,8 @@ def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,
         
     # Dataset parameters
     ds_params=read_dataset_params(dataset_dir)
-
     shl_cmd = "sed -n '%d,%dp' %s > geom%s.csv" % (chan_range[0]+1, chan_range[1]+1, geom_file, suffix);
+    
     curr_dir = os.getcwd();
     os.chdir(output_dir);
     subprocess.run(shl_cmd, shell=True);
@@ -65,6 +65,7 @@ def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,
     if 'detect_sign' in ds_params:
         detect_sign=ds_params['detect_sign']
     ms4alg_sort(
+        
         timeseries=output_dir+'/pre%s.mda.prv' % suffix,
         geom=dataset_dir+'/geom%s.csv' % suffix,
         firings_out=output_dir+'/firings_uncurated%s.mda' % suffix,
