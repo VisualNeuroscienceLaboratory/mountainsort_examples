@@ -7,7 +7,7 @@ sorting process you’ll need to use klingsor, farzana, or another mac (I’m wo
 instructions for any mac). Just for now limit yourself to recordings where we did a channel map
 of 1-384. I need to make more geom files to do the others (referenced below).
 
-Note that the git repository (on Arindal) is located at ~/movshonMS4.
+**Note that the git repository (on Arindal) is located at ~/movshonMS4.**
 
 ## Background:
 
@@ -52,9 +52,11 @@ channels:270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,
 308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,
 328,329,330,331,332,333,
 ~~~~
-5: Create a geom file.  
-Note (from PL) that there is analogous (perhaps updated) set of configuration files that are part of the core 
-github repository (i.e. ~/movshonMS4/python/).  
+5: Create a geom file.
+  
+Note (from PL): there is analogous (perhaps updated) set of configuration files that are part of the core 
+github repository (i.e. ~/movshonMS4/python/).
+  
 Okay this is a legitimate headache. In
 /experiments/ms4binaries/config_files there is an .csv file called npx_1_384.csv.
 For the channels you selected in step 4, copy those corresponding rows of the csv to a
@@ -96,7 +98,11 @@ Instead, in an Xquartz terminal run the following
 ~~~~
 ssh -X stimulus@arindal.cns.nyu.edu
 ~~~~
-and navigate back to where you data is, and run the "qt-mountainview" command as below.  
+and navigate back to where you data is, and run the "qt-mountainview" command as below. On arindal, run
+~~~~
+conda activate mlab
+~~~~
+(future proof: run "conda info --envs" to get a list of all possible conda environments)
 
 9b: After sorting is completed, transfer the files to a computer with mountainview and go
 over results. Let's take klingsor as an example
@@ -107,5 +113,9 @@ conda activate mountainlab
 navigate to where the files are stored.
 ~~~~
 qt-mountainview --raw=raw.mda --firings=firings.mda --samplerate=30000
+~~~~
+Note that you can also add the following flag to recover any manual curating previously done and saved (will be .json) -
+~~~~
+--cluster_metrics=[your_cluster_metrics.json]
 ~~~~
 
