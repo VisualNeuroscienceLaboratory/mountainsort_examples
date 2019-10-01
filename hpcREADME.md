@@ -24,7 +24,7 @@ This will allow you to simply
 ~~~~
 ssh prince
 ~~~~
-from a terminal window to access the prince HPC; further, ForwardX11 will allow you to get any graphical interfaces on the cluster sent (i.e. forwarded) to your home machine. For details on X11, see [https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId=280461906](this guide).
+from a terminal window to access the prince HPC; further, ForwardX11 will allow you to get any graphical interfaces on the cluster sent (i.e. forwarded) to your home machine. For details on X11, see [this guide](https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId=280461906).
 
 3. Our shared folder for VNL/ is /beegfs/work/movshon/. We have a (mini)conda install here, as well as all necessary packages and mountainsort/lab dependencies. For your own ease, you can add the following line to your bash profile (~/.bash_profile) on the HPC:
 ~~~~
@@ -36,3 +36,10 @@ alias cdMov="cd /beegfs/work/movshon/"
 cat prepareEnv.sh
 ~~~~
 then copy/paste those commands into the command line. This conda environment is described in environment.yml.
+As a test of the environment, the following command should list several mountainlab "processors" with example roots like ephys, ms3, ms4alg, spikeview:
+~~~~
+ml-list-processors
+~~~~
+If the above test worked, you are ready to use the mountainsort pipeline.
+
+5. First, you'll need to have 
