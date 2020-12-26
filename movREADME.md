@@ -39,48 +39,20 @@ As stimulus execute the following
 ~~~~
 conda activate mlab
 ~~~~
-4: Convert array to .mda format used as input into mountainlab. The last argument is a
-channels argument where you have to actually manually enter the 0 indexed channels you want
-to sort from. It is an enormous pain in the ass. I am working on getting this automated. In this
-example we are sorting channels 270-334 (remember channels start at 0!).
-~~~~
-cd /experiments/ms4binaries/m676/m676p3#
-ml-run-process ephys.convert_array --inputs input:m676p3#11.dat --outputs
-output:raw.mda --parameters dtype:int16 dimensions:385,-1
-channels:270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,
-,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,
-308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,
-328,329,330,331,332,333,
-~~~~
-5: Create a geom file.
+4: Create a geom file.
   
 Note (from PL): there is analogous (perhaps updated) set of configuration files that are part of the core 
 github repository (i.e. ~/movshonMS4/python/).
   
-Okay this is a legitimate headache. In
-/experiments/ms4binaries/config_files there is an .csv file called npx_1_384.csv.
-For the channels you selected in step 4, copy those corresponding rows of the csv to a
-new file entitled geom.csv and store it in /experiments/ms4binaries/m676/m676p3#11.
-The file **must** be called geom.csv
-Assuming you don't want to do this by hand or in matlab, you can run the following shell
-function:
 ~~~~
-sed -n '{1st channel},{Nth channel}p' npx_1_384.csv > geom.csv
-~~~~
-For example sticking to our example you would execute:
-~~~~
-sed -n '271,335p' npx_1_384.csv > geom.csv
-cp /experiments/ms4binaries/config_files/geom.csv
-/experiments/ms4binaries/m676/m676p3#
-~~~~
-6: Copy other configuration files to the folder from /experiments/ms4binaries/config_files
+5: Copy other configuration files to the folder from /experiments/ms4binaries/config_files
 ~~~~
 cp /experiments/ms4binaries/config_files/params.json
 /experiments/ms4binaries/m676/m676p3#11/
 cp /experiments/ms4binaries/config_files/template.ipynb
 /experiments/ms4binaries/m676/m676p3#11/
 ~~~~
-7: Open the python pipeline. In the terminal window where mlab activated execute
+6: Open the python pipeline. In the terminal window where mlab activated execute
 
 jupyter notebook --no-browser --port=8889
 In a second terminal window execute
@@ -89,8 +61,8 @@ ssh -N -f -L localhost:8888:localhost:8889 stimulus@arindal.cns.nyu.edu
 ~~~~
 Go to your browser and go to localhost:8888, a jupyter notebook will pop up  
 
-8: Run the python pipeline
-* Set things up to look only in the folder you are storing things in.
+7: 
+* Set things up to look only in the folder you are storing things in. Set the channels you wish to analyze.
 * Run the cells of the jupyter notebook.
 
 9a: If you are comfortable using Xquartz, then you need not transfer files to a computer with mountainview.
