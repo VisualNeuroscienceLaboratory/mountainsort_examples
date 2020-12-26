@@ -63,11 +63,9 @@ ssh -N -f -L localhost:8888:localhost:8889 stimulus@arindal.cns.nyu.edu
 ~~~~
 Go to your browser and go to localhost:8888, a jupyter notebook will pop up  
 
-7: 
-* Set things up to look only in the folder you are storing things in. Set the channels you wish to analyze.
+7: Open template.ipynb (or whatever you renamed it)
+* Set things up to look only in the folder you are storing things in. Set the channels you wish to analyze by changing the values of the tuple chan_range.
 * Run the cells of the jupyter notebook.
-
-
 
 8: If you are comfortable using Xquartz, then you need not transfer files to a computer with mountainview.
 Instead, in an Xquartz terminal run the following
@@ -80,7 +78,7 @@ conda activate mlab
 ~~~~
 (future proof: run "conda info --envs" to get a list of all possible conda environments)
 
-9b: After sorting is completed, transfer the files to a computer with mountainview and go
+9a: After sorting is completed, transfer the files to a computer with mountainview and go
 over results. Let's take klingsor as an example
 ~~~~
 bash
