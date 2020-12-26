@@ -40,7 +40,7 @@ As stimulus execute the following
 conda activate mlab
 ~~~~
 4: Create a geom file.
-  
+~~~!
 Note (from PL): there is analogous (perhaps updated) set of configuration files that are part of the core 
 github repository (i.e. ~/movshonMS4/python/).
   
@@ -53,9 +53,11 @@ cp /experiments/ms4binaries/config_files/template.ipynb
 /experiments/ms4binaries/m676/m676p3#11/
 ~~~~
 6: Open the python pipeline. In the terminal window where mlab activated execute
-
+~~~~
 jupyter notebook --no-browser --port=8889
+~~~~
 In a second terminal window execute
+
 ~~~~
 ssh -N -f -L localhost:8888:localhost:8889 stimulus@arindal.cns.nyu.edu
 ~~~~
@@ -65,7 +67,9 @@ Go to your browser and go to localhost:8888, a jupyter notebook will pop up
 * Set things up to look only in the folder you are storing things in. Set the channels you wish to analyze.
 * Run the cells of the jupyter notebook.
 
-9a: If you are comfortable using Xquartz, then you need not transfer files to a computer with mountainview.
+
+
+8: If you are comfortable using Xquartz, then you need not transfer files to a computer with mountainview.
 Instead, in an Xquartz terminal run the following
 ~~~~
 ssh -X stimulus@arindal.cns.nyu.edu
