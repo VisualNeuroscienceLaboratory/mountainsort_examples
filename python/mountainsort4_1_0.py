@@ -7,10 +7,11 @@ import warnings
 import subprocess
 import pdb
 
-def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,adjacency_radius,detect_threshold,detect_interval,chan_range,geom_file='npx_1_384.csv',dtype='int16',n_chan=385,opts={}):
+def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,adjacency_radius,detect_threshold,detect_interval,chan_range,geom_file='npx_1_384.csv',dtype='int16',n_chan=385,opts={},append_params=0):
     ''' From FlatironInstitute directly, but edits made by VNL
         suffix - added option which is added to base names (e.g. for the .mda (pre?) processing file so it isn't just "raw.mda"; instead raw[suffix].mda)
                    thus, we can have more than one saved file at a time (no overwrites with unique names)
+        append_params: by default, leave the naming convention as is; but if =1, then append the adj radius (r), det. thresh. (t), and det. interval (i) to output names
     '''
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -19,6 +20,8 @@ def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,
       warnings.warn('Channel range should be [a,b], with a<b; defaulting to 100-130');
       chan_range = [100,129];
     suffix = '_%d_%d' % (chan_range[0], chan_range[1]);
+    if append_params == 1:
+        suffix = '%s_r%02d_t%02d_i%02d' % (suffix, adjacency_radius,detect_threshold,detect_interval)
     list_chans = lambda x: ",".join(map(str, np.arange(x[0], x[1]+1)))
     output_file = 'raw%s.mda' % suffix;
         
