@@ -21,7 +21,9 @@ def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,
       chan_range = [100,129];
     suffix = '_%d_%d' % (chan_range[0], chan_range[1]);
     if append_params == 1:
-        suffix = '%s_r%02d_t%02d_i%02d' % (suffix, adjacency_radius,detect_threshold,detect_interval)
+        suffix_prms = '%s_r%02d_t%02d_i%02d' % (suffix, adjacency_radius,detect_threshold,detect_interval)
+    else:
+        suffix_prms = suffix;
     list_chans = lambda x: ",".join(map(str, np.arange(x[0], x[1]+1)))
     output_file = 'raw%s.mda' % suffix;
         
@@ -47,7 +49,7 @@ def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,
     # Bandpass filter
     bandpass_filter(
         timeseries=dataset_dir+'/raw%s.mda' % suffix,
-        timeseries_out=output_dir+'/filt%s.mda.prv' % suffix,
+        timeseries_out=output_dir+'/filt%s.mda.prv' % suffix_prms,
         samplerate=ds_params['samplerate'],
         freq_min=freq_min,
         freq_max=freq_max,
@@ -56,8 +58,8 @@ def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,
     
     # Whiten
     whiten(
-        timeseries=output_dir+'/filt%s.mda.prv' % suffix,
-        timeseries_out=output_dir+'/pre%s.mda.prv' % suffix,
+        timeseries=output_dir+'/filt%s.mda.prv' % suffix_prms,
+        timeseries_out=output_dir+'/pre%s.mda.prv' % suffix_prms,
         opts=opts
     )
     
@@ -69,9 +71,9 @@ def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,
         detect_sign=ds_params['detect_sign']
     ms4alg_sort(
         
-        timeseries=output_dir+'/pre%s.mda.prv' % suffix,
+        timeseries=output_dir+'/pre%s.mda.prv' % suffix_prms,
         geom=dataset_dir+'/geom%s.csv' % suffix,
-        firings_out=output_dir+'/firings_uncurated%s.mda' % suffix,
+        firings_out=output_dir+'/firings_uncurated%s.mda' % suffix_prms,
         adjacency_radius=adjacency_radius,
         detect_sign=detect_sign,
         detect_threshold=detect_threshold,
@@ -81,18 +83,18 @@ def sort_dataset(*,dataset_dir,output_dir,input_file,freq_min=300,freq_max=6000,
     
     # Compute cluster metrics
     compute_cluster_metrics(
-        timeseries=output_dir+'/pre%s.mda.prv' % suffix,
-        firings=output_dir+'/firings_uncurated%s.mda' % suffix,
-        metrics_out=output_dir+'/cluster_metrics%s.json' % suffix,
+        timeseries=output_dir+'/pre%s.mda.prv' % suffix_prms,
+        firings=output_dir+'/firings_uncurated%s.mda' % suffix_prms,
+        metrics_out=output_dir+'/cluster_metrics%s.json' % suffix_prms,
         samplerate=ds_params['samplerate'],
         opts=opts
     )
     
     # Automated curation
     automated_curation(
-        firings=output_dir+'/firings_uncurated%s.mda' % suffix,
-        cluster_metrics=output_dir+'/cluster_metrics%s.json' % suffix,
-        firings_out=output_dir+'/firings%s.mda' % suffix,
+        firings=output_dir+'/firings_uncurated%s.mda' % suffix_prms,
+        cluster_metrics=output_dir+'/cluster_metrics%s.json' % suffix_prms,
+        firings_out=output_dir+'/firings%s.mda' % suffix_prms,
         opts=opts
     )
     
